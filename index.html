@@ -24,25 +24,7 @@
 </head>
 <body>
     <canvas id="renderCanvas"></canvas>
-    <script>
-        // Your JavaScript code here, modified to not use imports
-        const canvas = document.getElementById("renderCanvas");
-        const engine = new BABYLON.Engine(canvas, true);
-        const scene = new BABYLON.Scene(engine);
-        
-        // Convert other imports to use BABYLON namespace
-        const camera = new BABYLON.UniversalCamera(
-            "camera",
-            new BABYLON.Vector3.Zero(),
-            scene
-        );
-        camera.attachControl(canvas, true);
-        
-        // Rest of your code, replacing all imported classes with BABYLON.ClassName
-        // For example:
-        // PhotoDome becomes BABYLON.PhotoDome
-        // AdvancedDynamicTexture becomes BABYLON.GUI.AdvancedDynamicTexture
-        // etc.
-    </script>
+    <!-- Include your JavaScript file -->
+    <script src="index.js"></script>
 </body>
 </html>
