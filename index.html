@@ -1,14 +1,48 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>360 Photo and Video Viewer by Hugh Hou (WebXR for Vision Pro)</title>
-    <meta charset="UTF-8" />
-    <link rel="stylesheet" href="styles.css" />
-    
-  </head>
-
-  <body>
+<head>
+    <meta charset="utf-8">
+    <title>360 Viewer</title>
+    <!-- Add BabylonJS CDN links -->
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+    <script src="https://cdn.babylonjs.com/gui/babylon.gui.min.js"></script>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        #renderCanvas {
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+        }
+    </style>
+</head>
+<body>
     <canvas id="renderCanvas"></canvas>
-    <script type="module" src="/index.js"></script>
-  </body>
-</html> 
+    <script>
+        // Your JavaScript code here, modified to not use imports
+        const canvas = document.getElementById("renderCanvas");
+        const engine = new BABYLON.Engine(canvas, true);
+        const scene = new BABYLON.Scene(engine);
+        
+        // Convert other imports to use BABYLON namespace
+        const camera = new BABYLON.UniversalCamera(
+            "camera",
+            new BABYLON.Vector3.Zero(),
+            scene
+        );
+        camera.attachControl(canvas, true);
+        
+        // Rest of your code, replacing all imported classes with BABYLON.ClassName
+        // For example:
+        // PhotoDome becomes BABYLON.PhotoDome
+        // AdvancedDynamicTexture becomes BABYLON.GUI.AdvancedDynamicTexture
+        // etc.
+    </script>
+</body>
+</html>

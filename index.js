@@ -1,302 +1,224 @@
-import {
-  Engine,
-  Scene,
-  Vector3,
-  Texture,
-  PhotoDome,
-  VideoDome,
-  Animation,
-  UniversalCamera,
-} from "@babylonjs/core";
-
-import "@babylonjs/loaders";
-import "@babylonjs/core/Particles/particleSystemComponent";
-import "@babylonjs/core/Particles/webgl2ParticleSystem";
-import {
-  AdvancedDynamicTexture,
-  StackPanel,
-  Button,
-  Control
-} from "@babylonjs/gui";
-
-import { WebXRDefaultExperience } from '@babylonjs/core/XR/webXRDefaultExperience.js'
-
-// Enable GLTF/GLB loader for loading controller models from WebXR Input registry
-import '@babylonjs/loaders/glTF'
-
-// Without this next import, an error message like this occurs loading controller models:
-//  Build of NodeMaterial failed" error when loading controller model
-//  Uncaught (in promise) Build of NodeMaterial failed: input rgba from block
-//  FragmentOutput[FragmentOutputBlock] is not connected and is not optional.
-import '@babylonjs/core/Materials/Node/Blocks'
-
-import losAngeles from "./assets/forFacebook-8K-LA.jpg";
-import athens from "./assets/Athens-8K.jpg";
-import lakeTahao from "./assets/LakeTahao-10K.jpg";
-import lakeTahao8k360video from "./assets/LakeTahao-8K-short-360.mp4";
-
-
+// Create the Scene and Engine
 const canvas = document.getElementById("renderCanvas");
-const engine = new Engine(canvas, true);
+const engine = new BABYLON.Engine(canvas, true);
+const scene = new BABYLON.Scene(engine);
 
-const scene = new Scene(engine);
-//var xrHelper = scene.createDefaultXRExperienceAsync();
-//var vrHelper = scene.createDefaultVRExperience();
+// Set up VR
 var vrHelper = scene.createDefaultVRExperience({createDeviceOrientationCamera:false}); 
 
-const camera = new UniversalCamera(
-  "camera",
-  Vector3.Zero(),
-  scene
+// Create camera
+const camera = new BABYLON.UniversalCamera(
+    "camera",
+    BABYLON.Vector3.Zero(),
+    scene
 );
 camera.attachControl(canvas, true);
 
+// Render loop
 engine.runRenderLoop(() => {
-  scene.render();
+    scene.render();
 });
 window.addEventListener("resize", () => {
-  engine.resize();
+    engine.resize();
 });
 
+// Asset paths - update these to your actual asset locations
+const assetPaths = {
+    losAngeles: "./assets/forFacebook-8K-LA.jpg",
+    athens: "./assets/Athens-8K.jpg",
+    lakeTahao: "./assets/LakeTahao-10K.jpg",
+    lakeTahaoVideo: "./assets/LakeTahao-8K-short-360.mp4"
+};
 
 // Create the PhotoDome
-var dome = new PhotoDome(
-  "sphere",
-  losAngeles,
-  {
-    resolution: 64,
-    size: 1000,
-    //halfDomeMode: true,
-    useDirectMapping: false
-  },
-  scene
+let dome = new BABYLON.PhotoDome(
+    "sphere",
+    assetPaths.losAngeles,
+    {
+        resolution: 64,
+        size: 1000,
+        useDirectMapping: false
+    },
+    scene
 );
-dome.imageMode = PhotoDome.MODE_MONOSCOPIC;
+dome.imageMode = BABYLON.PhotoDome.MODE_MONOSCOPIC;
 
 vrHelper.enableInteractions();
 
-// Create a GUI texture
-const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI(
-  "UI"
-);
+// Create GUI
+const advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
 
-// Create a stack panel to hold the buttons
-const stackPanel = new StackPanel();
+// Create stack panel
+const stackPanel = new BABYLON.GUI.StackPanel();
 stackPanel.width = "300px";
-stackPanel.horizontalAlignment =
-  Control.HORIZONTAL_ALIGNMENT_RIGHT;
-stackPanel.verticalAlignment =
-  Control.VERTICAL_ALIGNMENT_CENTER;
+stackPanel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
+stackPanel.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
 advancedTexture.addControl(stackPanel);
 
-// Create the buttons
-const button1 = Button.CreateSimpleButton(
-  "button1",
-  "Los Angeles"
-);
-button1.width = "200px";
-button1.height = "100px";
-button1.paddingBottom ="30px";
-button1.cornerRadius="10";
-button1.shadowColor="black";
-button1.shadowOffsetX="2";
-button1.shadowOffsetY="2";
-button1.shadowBlur="30";
-button1.color = "white";
-button1.thickness = 2;
-button1.background = "gray";
-button1.alpha = "0.5";
+// Button creation helper
+const createButton = (name, text) => {
+    const button = BABYLON.GUI.Button.CreateSimpleButton(name, text);
+    button.width = "200px";
+    button.height = "100px";
+    button.paddingBottom = "30px";
+    button.cornerRadius = 10;
+    button.shadowColor = "black";
+    button.shadowOffsetX = 2;
+    button.shadowOffsetY = 2;
+    button.shadowBlur = 30;
+    button.color = "white";
+    button.thickness = 0;
+    button.background = "gray";
+    button.alpha = 0.5;
+    return button;
+};
+
+// Create buttons
+const button1 = createButton("button1", "Los Angeles");
+const button2 = createButton("button2", "Athens, Greece");
+const button3 = createButton("button3", "Lake Tahoe");
+const button4 = createButton("button4", "360 Video");
+
+// Button click handlers
 button1.onPointerUpObservable.add(() => {
-  button1.thickness = 2;
-  button2.thickness = 0;
-  button3.thickness = 0;
-  button4.thickness = 0;
-  transition(losAngeles);
+    updateButtonThickness(button1);
+    transition(assetPaths.losAngeles);
 });
-stackPanel.addControl(button1);
 
-const button2 = Button.CreateSimpleButton(
-  "button2",
-  "Athens, Greece"
-);
-button2.width = "200px";
-button2.height = "100px";
-button2.paddingBottom ="30px";
-button2.cornerRadius="10";
-button2.shadowColor="black";
-button2.shadowOffsetX="2";
-button2.shadowOffsetY="2";
-button2.shadowBlur="30";
-button2.color = "white";
-button2.thickness = 0;
-button2.background = "gray";
-button2.alpha = "0.5";
 button2.onPointerUpObservable.add(() => {
-  button1.thickness = 0;
-  button2.thickness = 2;
-  button3.thickness = 0;
-  button4.thickness = 0;
-  transition(athens);
+    updateButtonThickness(button2);
+    transition(assetPaths.athens);
 });
-stackPanel.addControl(button2);
 
-const button3 = Button.CreateSimpleButton(
-  "button3",
-  "Lake Tahoe"
-);
-button3.width = "200px";
-button3.height = "100px";
-button3.paddingBottom ="30px";
-button3.cornerRadius="10";
-button3.shadowColor="black";
-button3.shadowOffsetX="2";
-button3.shadowOffsetY="2";
-button3.shadowBlur="30";
-button3.color = "white";
-button3.thickness = 0;
-button3.background = "gray";
-button3.alpha = "0.5";
 button3.onPointerUpObservable.add(() => {
-  button1.thickness = 0;
-  button2.thickness = 0;
-  button3.thickness = 2;
-  button4.thickness = 0;
-  transition(lakeTahao);
+    updateButtonThickness(button3);
+    transition(assetPaths.lakeTahao);
 });
-stackPanel.addControl(button3);
 
-const button4 = Button.CreateSimpleButton(
-  "button4",
-  "360 Video"
-);
-button4.width = "200px";
-button4.height = "100px";
-button4.paddingBottom ="30px";
-button4.cornerRadius="10";
-button4.shadowColor="black";
-button4.shadowOffsetX="2";
-button4.shadowOffsetY="2";
-button4.shadowBlur="30";
-button4.color = "white";
-button4.thickness = 0;
-button4.background = "gray";
-button4.alpha = "0.5";
 button4.onPointerUpObservable.add(() => {
-  button1.thickness = 0;
-  button2.thickness = 0;
-  button3.thickness = 0;
-  button4.thickness = 2
-  transitionVideo(lakeTahao);
+    updateButtonThickness(button4);
+    transitionVideo(assetPaths.lakeTahaoVideo);
 });
-stackPanel.addControl(button4);
 
-const transition = (image) => {
-  let anim = scene.beginDirectAnimation(
-    dome.mesh,
-    [fadeOutAnimation],
-    0,
-    120,
-    false
-  );
-  anim.onAnimationEnd = () => loadNewTexture(image);
+// Add buttons to panel
+[button1, button2, button3, button4].forEach(button => stackPanel.addControl(button));
+
+// Helper function to update button thickness
+function updateButtonThickness(activeButton) {
+    [button1, button2, button3, button4].forEach(button => {
+        button.thickness = button === activeButton ? 2 : 0;
+    });
+}
+
+// Create animations
+const createAnimation = (name, targetProperty, frameRate, type, loopMode) => {
+    return new BABYLON.Animation(
+        name,
+        targetProperty,
+        frameRate,
+        type,
+        loopMode
+    );
 };
 
-const transitionVideo = (video) => {
-  let anim = scene.beginDirectAnimation(
-    dome.mesh,
-    [fadeOutAnimation],
-    0,
-    120,
-    false
-  );
-  anim.onAnimationEnd = () => loadNewVideoTexture(video);
-};
-
-const loadNewTexture = (image) => {
-  const newTexture = new Texture(image, scene);
-  newTexture.onLoadObservable.add(() => {
-    dome.dispose();
-
-    // Create a new dome with the new texture
-    dome = new PhotoDome(
-      "sphere",
-      image,
-      {
-        resolution: 128,
-        size: 1000,
-        useDirectMapping: false
-      },
-      scene
-    );
-    
-    dome.mesh.material.alpha = 0;
-    dome.imageMode = PhotoDome.MODE_TOPBOTTOM;
-    scene.beginDirectAnimation(
-      dome.mesh,
-      [fadeInAnimation],
-      0,
-      120,
-      false
-    );
-  });
-};
-
-const loadNewVideoTexture = (video) => {
-  const newTexture = new Texture(video, scene);
-  newTexture.onLoadObservable.add(() => {
-    dome.dispose();
-
-    // Create the VideoDome
-    dome = new VideoDome(
-      "videoSphere",
-      lakeTahao8k360video,
-      {
-        resolution: 64,
-        size: 1000,
-        clickToPlay: true,
-        useDirectMapping: false
-      },
-      scene
-    );
-    
-    dome.mesh.material.alpha = 0;
-    dome.imageMode = PhotoDome.MODE_TOPBOTTOM;
-    scene.beginDirectAnimation(
-      dome.mesh,
-      [fadeInAnimation],
-      0,
-      120,
-      false
-    );
-  });
-};
-
-const fadeOutAnimation = new Animation(
-  "fadeOut",
-  "material.alpha",
-  40,
-  Animation.ANIMATIONTYPE_FLOAT,
-  Animation.ANIMATIONLOOPMODE_CONSTANT
+const fadeOutAnimation = createAnimation(
+    "fadeOut",
+    "material.alpha",
+    40,
+    BABYLON.Animation.ANIMATIONTYPE_FLOAT,
+    BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
 );
 
 fadeOutAnimation.setKeys([
-  { frame: 0, value: 1 },
-  { frame: 120, value: 0 }
+    { frame: 0, value: 1 },
+    { frame: 120, value: 0 }
 ]);
 
-const fadeInAnimation = new Animation(
-  "fadeIn",
-  "material.alpha",
-  40,
-  Animation.ANIMATIONTYPE_FLOAT,
-  Animation.ANIMATIONLOOPMODE_CONSTANT
+const fadeInAnimation = createAnimation(
+    "fadeIn",
+    "material.alpha",
+    40,
+    BABYLON.Animation.ANIMATIONTYPE_FLOAT,
+    BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
 );
 
 fadeInAnimation.setKeys([
-  { frame: 0, value: 0 },
-  { frame: 120, value: 1 }
+    { frame: 0, value: 0 },
+    { frame: 120, value: 1 }
 ]);
 
-// scene.onBeforeRenderObservable.add(() => {
-//   
-// });
+// Transition functions
+const transition = (image) => {
+    let anim = scene.beginDirectAnimation(
+        dome.mesh,
+        [fadeOutAnimation],
+        0,
+        120,
+        false
+    );
+    anim.onAnimationEnd = () => loadNewTexture(image);
+};
+
+const transitionVideo = (video) => {
+    let anim = scene.beginDirectAnimation(
+        dome.mesh,
+        [fadeOutAnimation],
+        0,
+        120,
+        false
+    );
+    anim.onAnimationEnd = () => loadNewVideoTexture(video);
+};
+
+const loadNewTexture = (image) => {
+    const newTexture = new BABYLON.Texture(image, scene);
+    newTexture.onLoadObservable.add(() => {
+        dome.dispose();
+        dome = new BABYLON.PhotoDome(
+            "sphere",
+            image,
+            {
+                resolution: 128,
+                size: 1000,
+                useDirectMapping: false
+            },
+            scene
+        );
+        dome.mesh.material.alpha = 0;
+        dome.imageMode = BABYLON.PhotoDome.MODE_TOPBOTTOM;
+        scene.beginDirectAnimation(
+            dome.mesh,
+            [fadeInAnimation],
+            0,
+            120,
+            false
+        );
+    });
+};
+
+const loadNewVideoTexture = (video) => {
+    const newTexture = new BABYLON.Texture(video, scene);
+    newTexture.onLoadObservable.add(() => {
+        dome.dispose();
+        dome = new BABYLON.VideoDome(
+            "videoSphere",
+            video,
+            {
+                resolution: 64,
+                size: 1000,
+                clickToPlay: true,
+                useDirectMapping: false
+            },
+            scene
+        );
+        dome.mesh.material.alpha = 0;
+        dome.imageMode = BABYLON.PhotoDome.MODE_TOPBOTTOM;
+        scene.beginDirectAnimation(
+            dome.mesh,
+            [fadeInAnimation],
+            0,
+            120,
+            false
+        );
+    });
+};
