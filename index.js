@@ -24,6 +24,7 @@ window.addEventListener("resize", () => {
 
 // Asset paths - update these to your actual asset locations
 const assetPaths = {
+    livingRoom: "./assets/Livingroom.jpg",
     losAngeles: "./assets/forFacebook-8K-LA.jpg",
     athens: "./assets/Athens-8K.jpg",
     lakeTahao: "./assets/LakeTahao-10K.jpg",
@@ -74,7 +75,8 @@ const createButton = (name, text) => {
 };
 
 // Create buttons
-const button1 = createButton("button1", "Los Angeles");
+// const button1 = createButton("button1", "Los Angeles");
+const button1 = createButton("button1", "Living room");
 const button2 = createButton("button2", "Athens, Greece");
 const button3 = createButton("button3", "Lake Tahoe");
 const button4 = createButton("button4", "360 Video");
@@ -82,7 +84,8 @@ const button4 = createButton("button4", "360 Video");
 // Button click handlers
 button1.onPointerUpObservable.add(() => {
     updateButtonThickness(button1);
-    transition(assetPaths.losAngeles);
+//    transition(assetPaths.losAngeles);
+    transition(assetPaths.livingRoom);
 });
 
 button2.onPointerUpObservable.add(() => {
