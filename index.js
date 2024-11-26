@@ -34,7 +34,8 @@ const assetPaths = {
 // Create the PhotoDome
 let dome = new BABYLON.PhotoDome(
     "sphere",
-    assetPaths.losAngeles,
+    // assetPaths.losAngeles,
+    assetPaths.livingRoom,
     {
         resolution: 64,
         size: 1000,
