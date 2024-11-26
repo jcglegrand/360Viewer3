@@ -24,7 +24,7 @@ window.addEventListener("resize", () => {
 
 // Asset paths - update these to your actual asset locations
 const assetPaths = {
-    livingRoom: "./assets/Livingroom.jpg",
+    livingRoom: "./assets/Living_room.jpg",
     losAngeles: "./assets/forFacebook-8K-LA.jpg",
     athens: "./assets/Athens-8K.jpg",
     lakeTahao: "./assets/LakeTahao-10K.jpg",
