@@ -105,7 +105,8 @@ button4.onPointerUpObservable.add(() => {
 });
 
 // Add buttons to panel
-[button1, button2, button3, button4].forEach(button => stackPanel.addControl(button));
+// [button1, button2, button3, button4].forEach(button => stackPanel.addControl(button));
+[button1].forEach(button => stackPanel.addControl(button));
 
 // Helper function to update button thickness
 function updateButtonThickness(activeButton) {
