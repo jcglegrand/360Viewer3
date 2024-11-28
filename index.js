@@ -24,7 +24,7 @@ window.addEventListener("resize", () => {
 
 // Asset paths - update these to your actual asset locations
 const assetPaths = {
-    livingRoom: "./assets/Living_room_small.jpg",
+    artAndTech: "./assets/art_and_tech_space_small.jpg",
     losAngeles: "./assets/forFacebook-8K-LA.jpg",
     athens: "./assets/Athens-8K.jpg",
     lakeTahao: "./assets/LakeTahao-10K.jpg",
@@ -35,7 +35,7 @@ const assetPaths = {
 let dome = new BABYLON.PhotoDome(
     "sphere",
     // assetPaths.losAngeles,
-    assetPaths.livingRoom,
+    assetPaths.artAndTech,
     {
         resolution: 64,
         size: 1000,
@@ -77,7 +77,7 @@ const createButton = (name, text) => {
 
 // Create buttons
 // const button1 = createButton("button1", "Los Angeles");
-const button1 = createButton("button1", "Living room");
+const button1 = createButton("button1", "EPO A&T space");
 const button2 = createButton("button2", "Athens, Greece");
 const button3 = createButton("button3", "Lake Tahoe");
 const button4 = createButton("button4", "360 Video");
@@ -86,7 +86,7 @@ const button4 = createButton("button4", "360 Video");
 button1.onPointerUpObservable.add(() => {
     updateButtonThickness(button1);
 //    transition(assetPaths.losAngeles);
-    transition(assetPaths.livingRoom);
+    transition(assetPaths.artAndTech);
 });
 
 button2.onPointerUpObservable.add(() => {
@@ -109,7 +109,8 @@ button4.onPointerUpObservable.add(() => {
 
 // Helper function to update button thickness
 function updateButtonThickness(activeButton) {
-    [button1, button2, button3, button4].forEach(button => {
+    // [button1, button2, button3, button4].forEach(button => {
+    [button1].forEach(button => {
         button.thickness = button === activeButton ? 2 : 0;
     });
 }
