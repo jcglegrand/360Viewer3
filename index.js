@@ -78,9 +78,6 @@ const createButton = (name, text) => {
 // Create buttons
 // const button1 = createButton("button1", "Los Angeles");
 const button1 = createButton("button1", "EPO A&T space");
-const button2 = createButton("button2", "Athens, Greece");
-const button3 = createButton("button3", "Lake Tahoe");
-const button4 = createButton("button4", "360 Video");
 
 // Button click handlers
 button1.onPointerUpObservable.add(() => {
@@ -89,20 +86,6 @@ button1.onPointerUpObservable.add(() => {
     transition(assetPaths.artAndTech);
 });
 
-button2.onPointerUpObservable.add(() => {
-    updateButtonThickness(button2);
-    transition(assetPaths.athens);
-});
-
-button3.onPointerUpObservable.add(() => {
-    updateButtonThickness(button3);
-    transition(assetPaths.lakeTahao);
-});
-
-button4.onPointerUpObservable.add(() => {
-    updateButtonThickness(button4);
-    transitionVideo(assetPaths.lakeTahaoVideo);
-});
 
 // Add buttons to panel
 // [button1, button2, button3, button4].forEach(button => stackPanel.addControl(button));
