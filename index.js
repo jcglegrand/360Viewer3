@@ -146,6 +146,7 @@ const transition = (image) => {
         false
     );
     anim.onAnimationEnd = () => loadNewTexture(image);
+    
 };
 
 const transitionVideo = (video) => {
@@ -175,6 +176,10 @@ const loadNewTexture = (image) => {
         );
         dome.mesh.material.alpha = 0;
         dome.imageMode = BABYLON.PhotoDome.MODE_TOPBOTTOM;
+
+        const sphere = BABYLON.MeshBuilder.CreateSphere("object", {diameter: 50}, scene);
+        sphere.position = new BABYLON.Vector3(0, 0, 500); // Position within dome
+
         scene.beginDirectAnimation(
             dome.mesh,
             [fadeInAnimation],
