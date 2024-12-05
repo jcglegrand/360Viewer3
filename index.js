@@ -177,9 +177,20 @@ const loadNewTexture = (image) => {
         dome.mesh.material.alpha = 0;
         dome.imageMode = BABYLON.PhotoDome.MODE_TOPBOTTOM;
 
-        const sphere = BABYLON.MeshBuilder.CreateSphere("object", {diameter: 50}, scene);
-        sphere.position = new BABYLON.Vector3(0, 0, 500); // Position within dome
+        // Ensure proper lighting
+        const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
 
+        // Create a visible sphere
+        const sphere = BABYLON.MeshBuilder.CreateSphere("object", {diameter: 100}, scene);
+
+        // Set a bright, distinct material
+        const sphereMaterial = new BABYLON.StandardMaterial("sphereMat", scene);
+        sphereMaterial.diffuseColor = new BABYLON.Color3(1, 0, 0); // Bright red
+        sphere.material = sphereMaterial;
+
+        // Position carefully within the dome
+        sphere.position = new BABYLON.Vector3(0, 0, 500);
+        
         scene.beginDirectAnimation(
             dome.mesh,
             [fadeInAnimation],
