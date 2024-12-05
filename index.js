@@ -25,16 +25,11 @@ window.addEventListener("resize", () => {
 // Asset paths - update these to your actual asset locations
 const assetPaths = {
     artAndTech: "./assets/art_and_tech_space_small.jpg",
-    losAngeles: "./assets/forFacebook-8K-LA.jpg",
-    athens: "./assets/Athens-8K.jpg",
-    lakeTahao: "./assets/LakeTahao-10K.jpg",
-    lakeTahaoVideo: "./assets/LakeTahao-8K-short-360.mp4"
 };
 
 // Create the PhotoDome
 let dome = new BABYLON.PhotoDome(
     "sphere",
-    // assetPaths.losAngeles,
     assetPaths.artAndTech,
     {
         resolution: 64,
@@ -82,7 +77,6 @@ const button1 = createButton("button1", "EPO A&T space");
 // Button click handlers
 button1.onPointerUpObservable.add(() => {
     updateButtonThickness(button1);
-//    transition(assetPaths.losAngeles);
     transition(assetPaths.artAndTech);
 });
 
@@ -177,20 +171,25 @@ const loadNewTexture = (image) => {
         dome.mesh.material.alpha = 0;
         dome.imageMode = BABYLON.PhotoDome.MODE_TOPBOTTOM;
 
-        // Ensure proper lighting
+        // Add lighting to ensure visibility
         const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
 
-        // Create a visible sphere
-        const sphere = BABYLON.MeshBuilder.CreateSphere("object", {diameter: 100}, scene);
+        // Create a sphere with a distinct material
+        const sphere = BABYLON.MeshBuilder.CreateSphere("testSphere", {diameter: 100}, scene);
 
-        // Set a bright, distinct material
-        const sphereMaterial = new BABYLON.StandardMaterial("sphereMat", scene);
+        // Create a bright material to ensure visibility
+        const sphereMaterial = new BABYLON.StandardMaterial("sphereMaterial", scene);
         sphereMaterial.diffuseColor = new BABYLON.Color3(1, 0, 0); // Bright red
         sphere.material = sphereMaterial;
 
-        // Position carefully within the dome
-        sphere.position = new BABYLON.Vector3(0, 0, 500);
-        
+        // Positioning is crucial in a PhotoDome
+        // Since your dome size is 1000, try positioning relative to that
+        sphere.position = new BABYLON.Vector3(
+            0,      // x-axis (centered)
+            0,      // y-axis (centered)
+            500     // z-axis (halfway into the dome)
+        );
+
         scene.beginDirectAnimation(
             dome.mesh,
             [fadeInAnimation],
