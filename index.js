@@ -190,6 +190,12 @@ const loadNewTexture = (image) => {
             500     // z-axis (halfway into the dome)
         );
 
+        console.log("Sphere created:", sphere);
+        console.log("Sphere position:", sphere.position);
+        console.log("Sphere material:", sphere.material);
+      
+        
+
         scene.beginDirectAnimation(
             dome.mesh,
             [fadeInAnimation],
